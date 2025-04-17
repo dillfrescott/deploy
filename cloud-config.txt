@@ -1,7 +1,7 @@
 #cloud-config
 package_update: true
 package_upgrade: true
-package_reboot_if_required: true
+package_reboot_if_required: false
 
 packages:
   - libsdl2-2.0-0
@@ -9,8 +9,8 @@ packages:
   - wget
   - unzip
   - tzdata
-  - apt-utils # Good practice for unattended installs
-  - ca-certificates # Ensure wget/curl work reliably with HTTPS
+  - apt-utils
+  - ca-certificates
 
 # Define environment variables available to runcmd commands
 environment:
