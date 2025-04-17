@@ -5,10 +5,8 @@ package_reboot_if_required: false
 
 packages:
   - libsdl2-2.0-0
-  - unattended-upgrades
   - wget
   - unzip
-  - tzdata
   - apt-utils
   - ca-certificates
 
