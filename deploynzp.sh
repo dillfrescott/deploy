@@ -121,3 +121,5 @@ EOF
 echo "Unattended upgrades configured."
 
 echo "NZP Server Setup Complete."
+
+reboot
