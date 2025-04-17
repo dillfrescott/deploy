@@ -11,4 +11,4 @@ packages:
   - ca-certificates
 
 runcmd:
-  - curl -sSL https://raw.githubusercontent.com/dillfrescott/deploy/refs/heads/main/deploynzp.sh | NZP_RCON_PASSWORD=password_here bash -s
+  - curl -sSL https://raw.githubusercontent.com/dillfrescott/deploy-nzp-server/refs/heads/main/deploynzp.sh | NZP_RCON_PASSWORD=password_here bash -s
