@@ -9,9 +9,6 @@ if [ -z "${NZP_RCON_PASSWORD}" ]; then
 fi
 # --- End Sanity Check ---
 
-# Set Timezone
-timedatectl set-timezone America/Detroit
-
 # Create Swap File
 if ! swapon --show | grep -q /swapfile; then # Check if swap already exists/enabled
     fallocate -l 3G /swapfile
@@ -68,52 +65,5 @@ sed -i "s|${RCON_PLACEHOLDER}|${NZP_RCON_PASSWORD}|g" /etc/systemd/system/nzp.se
 # Enable Service
 systemctl daemon-reload
 systemctl enable --now nzp.service
-
-# Configure Unattended-Upgrades (only if files don't exist or differ significantly)
-# This prevents unnecessary rewrites on subsequent runs if using a tool that re-runs cloud-init
-mkdir -p /etc/apt/apt.conf.d/
-
-cat > /etc/apt/apt.conf.d/10periodic <<'EOF'
-APT::Periodic::Update-Package-Lists "1";
-APT::Periodic::Download-Upgradeable-Packages "1";
-APT::Periodic::AutocleanInterval "7"; # Clean more reasonably, daily is excessive
-APT::Periodic::Unattended-Upgrade "1";
-EOF
-
-cat > /etc/apt/apt.conf.d/20auto-upgrades <<'EOF'
-APT::Periodic::Update-Package-Lists "1";
-APT::Periodic::Unattended-Upgrade "1";
-EOF
-
-cat > /etc/apt/apt.conf.d/50unattended-upgrades <<'EOF'
-// Automatically upgrade packages from these (origin:archive) pairs
-Unattended-Upgrade::Allowed-Origins {
-        "${distro_id}:${distro_codename}";
-        "${distro_id}:${distro_codename}-security";
-        // Ubuntu Pro / ESM settings commented out unless specifically needed/enabled
-        // "${distro_id}ESMApps:${distro_codename}-apps-security";
-        // "${distro_id}ESM:${distro_codename}-infra-security";
-        "${distro_id}:${distro_codename}-updates";
-//      "${distro_id}:${distro_codename}-proposed"; // Proposed is usually not recommended for production
-        "${distro_id}:${distro_codename}-backports";
-};
-
-// List packages to prevent upgrading (e.g., kernel, specific drivers)
-Unattended-Upgrade::Package-Blacklist {
-//      "linux-generic";
-//      "linux-image-generic";
-//      "linux-headers-generic";
-};
-
-Unattended-Upgrade::DevRelease "auto"; // Keep "auto" unless you specifically want testing releases
-Unattended-Upgrade::AutoFixInterruptedDpkg "true";
-Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
-Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
-Unattended-Upgrade::Remove-Unused-Dependencies "true"; // This one is default true usually
-Unattended-Upgrade::Automatic-Reboot "true";
-Unattended-Upgrade::Automatic-Reboot-WithUsers "true"; // Reboot even if users are logged in
-Unattended-Upgrade::Automatic-Reboot-Time "03:00"; // Specify timezone via system time (set above)
-// Unattended-Upgrade::Allow-APT-Mark-Fallback "true"; // Usually not needed unless dealing with complex pinning
-EOF
 
 reboot
