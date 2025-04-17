@@ -116,10 +116,4 @@ Unattended-Upgrade::Automatic-Reboot-Time "03:00"; // Specify timezone via syste
 // Unattended-Upgrade::Allow-APT-Mark-Fallback "true"; // Usually not needed unless dealing with complex pinning
 EOF
 
-# Restart is likely unnecessary here, the service reads config on schedule
-# systemctl restart unattended-upgrades
-echo "Unattended upgrades configured."
-
-echo "NZP Server Setup Complete."
-
 reboot
