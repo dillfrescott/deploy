@@ -12,14 +12,5 @@ packages:
   - apt-utils
   - ca-certificates
 
-# Define environment variables available to runcmd commands
-environment:
-  NZP_RCON_PASSWORD: 'your_super_secret_password_here' # <-- SET YOUR RCON PASSWORD HERE
-
 runcmd:
-  # Download the script from GitHub and execute it with bash
-  # The environment variable NZP_RCON_PASSWORD will be available to the script
-  - curl -sSL https://raw.githubusercontent.com/dillfrescott/deploy/refs/heads/main/deploynzp.sh | bash -s
-
-# Optional: Final message (useful for debugging cloud-init logs)
-final_message: "Cloud-init finished. NZP server setup script executed."
+  - curl -sSL https://raw.githubusercontent.com/dillfrescott/deploy/refs/heads/main/deploynzp.sh | NZP_RCON_PASSWORD=password_here bash -s
